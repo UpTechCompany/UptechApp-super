@@ -122,8 +122,6 @@ public class MapFragment extends Fragment {
         final Observer<List<Emergency>> myObserver = new Observer<List<Emergency>>() {
             @Override
             public void onChanged(List<Emergency> emergencies) {
-                Log.d("NIKITA", "INOF");
-                Log.d("NIKITA", String.valueOf(emergencies.size()));
                 myEmergencyList.clear();
                 myEmergencyList.addAll(emergencies);
             }
@@ -145,30 +143,10 @@ public class MapFragment extends Fragment {
                     }
                 });
 
-        mapService = new MapService(getContext(), getActivity(), mGetContent);
+        mapService = new MapService(getContext(), getActivity(), mGetContent, person_latLng);
         SupportMapFragment mapFragment = (SupportMapFragment)
                 getChildFragmentManager().findFragmentById(R.id.google_map);
         mapFragment.getMapAsync(mapService);
-
-//        if (latLngs != null){
-//            mapFragment.getMapAsync(new OnMapReadyCallback() {
-//                @Override
-//                public void onMapReady(GoogleMap googleMap) {
-//                    mMap = googleMap;
-//                    zoom(latLngs, 18);
-//                }
-//            });
-//            latLngs = null;
-//    } else if (person_latLng != null){
-//            mapFragment.getMapAsync(new OnMapReadyCallback() {
-//                @Override
-//                public void onMapReady(GoogleMap googleMap) {
-//                    mMap = googleMap;
-//                    zoom(person_latLng, 18);
-//                }
-//            });
-//        }
-
 
     }
 
@@ -176,13 +154,7 @@ public class MapFragment extends Fragment {
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoomLevel));
     }
 
-//    public void setLatLng(LatLng latLng) {
-//        this.latLng = latLng;
-//    }
-//
-//    public void setZoomLevel(float zoomLevel) {
-//        zoomLevel = zoomLevel;
-//    }
+
     boolean checkLoc(){
         return ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
                 ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;

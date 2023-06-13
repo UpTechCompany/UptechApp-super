@@ -84,16 +84,18 @@ public class MapService implements OnMapReadyCallback, GoogleMap.OnMapClickListe
     private Button btnShare;
     private ImageView emergencyImg;
     private final LatLng latLngs;
+    private final LatLng person_latLng;
 
 
 
 
-    public MapService(Context context, Activity activity, ActivityResultLauncher<String> mGetContent) {
+    public MapService(Context context, Activity activity, ActivityResultLauncher<String> mGetContent, LatLng person_latLng) {
         this.context = context;
         this.activity = activity;
         this.mGetContent = mGetContent;
         storageReference = FirebaseStorage.getInstance().getReference("Emergency");
         myEmergencyList = MyViewModel.getInstance().getEmergencyLiveData().getValue();
+        this.person_latLng = person_latLng;
         latLngs = MyViewModel.getInstance().getLatLng().getValue();
     }
 
@@ -227,6 +229,9 @@ public class MapService implements OnMapReadyCallback, GoogleMap.OnMapClickListe
 
         if (latLngs != null){
             zoom(latLngs, 18, googleMap);
+        }
+        else if (person_latLng != null){
+            zoom(person_latLng, 18, googleMap);
         }
 
         if (myEmergencyList != null) {
