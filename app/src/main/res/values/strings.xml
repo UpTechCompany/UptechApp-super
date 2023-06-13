@@ -1,0 +1,36 @@
+<resources>
+
+    <string name="choose_picture" translatable="true">Выберите картинку</string>
+    <string name="app_name" translatable="false">UptechApp</string>
+    <string name="id_logging" translatable="false">IdLogged</string>
+    <string name="learn" translatable="false">Learn</string>
+    <string name="default_web_client_id_google" translatable="false">573000313275-636b6r5sn8mob95rkder9r6tsoifdo2o.apps.googleusercontent.com</string>
+    <string name="progressBarLogging" translatable="false">Logging</string>
+    <string name="sign_in_with_google" translatable="true">Вход Google Account</string>
+    <string name="news" translatable="true">Новости</string>
+    <string name="verify_hint" translatable="true">Чтобы подтвердить свою личность, вам необходимо:</string>
+    <string name="login_inf" translatable="true">* Нажав на кнопку, вы соглашаетесь предоставить ваши данные UpTech для обработки.</string>
+    <string name="time" translatable="true">Время</string>
+    <string name="info" translatable="true">Информация</string>
+    <string name="name" translatable="true">Название</string>
+    <string name="title" translatable="true"><b>Заголовок</b></string>
+    <string name="dummy_button" translatable="false">Dummy Button</string>
+    <string name="dummy_content" translatable="false">DUMMY\nCONTENT</string>
+    <string name="create" translatable="true">Создание записи</string>
+    <string name="create_lable" translatable="true">Название</string>
+    <string name="create_create" translatable="true">Создание записи</string>
+    <string name="close" translatable="true">Закрыть</string>
+    <string name="todo" translatable="false">TODO</string>
+    <string name="description" translatable="true">Описание</string>
+    <string name="share_emergency" translatable="true">Поделиться записью</string>
+    <string name="map" translatable="true">Карта</string>
+    <string name="training" translatable="true">Обучение</string>
+    <string name="massage" translatable="true">Хотели бы вы пройти обучение по использованию приложения?</string>
+    <string name="yes" translatable="true">Да</string>
+    <string name="no" translatable="true">Нет</string>
+    <string name="load" translatable="true">Загрузка</string>
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="email">email</string>
+
+</resources>

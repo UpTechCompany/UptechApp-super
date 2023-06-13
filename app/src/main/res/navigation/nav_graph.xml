@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@+id/fragment_splash">
+
+    <fragment
+        android:id="@+id/fragment_splash"
+        tools:layout="@layout/fragment_splash"
+        android:name="com.example.uptechapp.activity.SplashFragment" >
+        <action
+            android:id="@+id/action_fragment_splash_to_fragment_login"
+            app:destination="@id/fragment_login" />
+        <action
+            android:id="@+id/action_fragment_splash_to_fragment_emergency_feed"
+            app:destination="@id/fragment_emergency_feed" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragment_login"
+        tools:layout="@layout/fragment_login"
+        android:name="com.example.uptechapp.activity.LoginFragment" >
+        <action
+            android:id="@+id/action_fragment_login_to_fragment_emergency_feed"
+            app:destination="@id/fragment_emergency_feed" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragment_emergency_feed"
+        tools:layout="@layout/fragment_emergency_feed"
+        android:name="com.example.uptechapp.activity.EmergencyFeedFragment" >
+        <action
+            android:id="@+id/action_fragment_emergency_feed_to_fragment_create"
+            app:destination="@id/fragment_create" />
+        <action
+            android:id="@+id/action_fragment_emergency_feed_to_fragment_map"
+            app:destination="@id/fragment_map" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragment_map"
+        tools:layout="@layout/fragment_map"
+        android:name="com.example.uptechapp.activity.MapFragment" >
+        <action
+            android:id="@+id/action_fragment_map_to_fragment_emergency_feed"
+            app:destination="@id/fragment_emergency_feed" />
+        <action
+            android:id="@+id/action_fragment_map_to_fragment_create"
+            app:destination="@id/fragment_create" />
+    </fragment>
+
+</navigation>

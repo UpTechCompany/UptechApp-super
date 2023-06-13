@@ -1,0 +1,34 @@
+<resources>
+
+    <string name="app_name" translatable="false">UptechApp</string>
+    <string name="id_logging" translatable="false">IdLogged</string>
+    <string name="learn" translatable="false">Learn</string>
+    <string name="default_web_client_id_google" translatable="false">573000313275-636b6r5sn8mob95rkder9r6tsoifdo2o.apps.googleusercontent.com</string>
+    <string name="progressBarLogging" translatable="false">Logging</string>
+    <string name="sign_in_with_google" translatable="true">Sign In With Google</string>
+    <string name="news" translatable="true">News</string>
+    <string name="verify_hint" translatable="true">To verify your personality you need to:</string>
+    <string name="login_inf" translatable="true">* clicking on the button, you agree to provide Your information is sent to the UpTech application for processing.</string>
+    <string name="time" translatable="true">Time</string>
+    <string name="info" translatable="true">Info</string>
+    <string name="name" translatable="true">Name</string>
+    <string name="title" translatable="true"><b>Title</b></string>
+    <string name="dummy_button" translatable="false">Dummy Button</string>
+    <string name="dummy_content" translatable="false">DUMMY\nCONTENT</string>
+    <string name="create" translatable="true">Create</string>
+    <string name="create_lable" translatable="true">Lable</string>
+    <string name="create_create" translatable="true">Create </string>
+    <string name="close" translatable="true">close</string>
+    <string name="todo" translatable="false">TODO</string>
+    <string name="description" translatable="true">Write description</string>
+    <string name="share_emergency">Share Emergency</string>
+    <string name="map">Map</string>
+    <string name="training">Training</string>
+    <string name="massage">Would you like to be trained on using the app?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="load" translatable="true">Loading</string>
+    <string name="choose_picture" translatable="true">Choose Picture</string>
+
+
+</resources>

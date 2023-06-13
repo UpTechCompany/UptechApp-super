@@ -1,0 +1,12 @@
+<resources>
+
+    <style name="Widget.Theme.UptechApp.ButtonBar.Fullscreen" parent="">
+        <item name="android:background">@color/white</item>
+        <item name="android:buttonBarStyle">?android:attr/buttonBarStyle</item>
+    </style>
+    <style name="UpApp" parent="">
+        <item name="android:background">@color/white</item>
+        <item name="android:buttonBarStyle">?android:attr/buttonBarStyle</item>
+        <item name="android:backgroundTint">@color/white</item>
+    </style>
+</resources>
