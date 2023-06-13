@@ -157,8 +157,8 @@ public class EmergencyAdapter extends RecyclerView.Adapter<EmergencyAdapter.View
             emergencyMapButton.setText(address);
             Log.d("Address", address);
             emergencyMapButton.setOnClickListener(v -> {
-                goToFragment();
                 MyViewModel.getInstance().getLatLng().postValue(loc);
+                goToFragment();
             });
             Glide.with(context).load(photo).into(emergencyPhoto);
          } catch (Exception e) {

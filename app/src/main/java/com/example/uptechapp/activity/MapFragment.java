@@ -150,24 +150,24 @@ public class MapFragment extends Fragment {
                 getChildFragmentManager().findFragmentById(R.id.google_map);
         mapFragment.getMapAsync(mapService);
 
-        if (latLngs != null){
-            mapFragment.getMapAsync(new OnMapReadyCallback() {
-                @Override
-                public void onMapReady(GoogleMap googleMap) {
-                    mMap = googleMap;
-                    zoom(latLngs, 18);
-                }
-            });
-            latLngs = null;
-    } else if (person_latLng != null){
-            mapFragment.getMapAsync(new OnMapReadyCallback() {
-                @Override
-                public void onMapReady(GoogleMap googleMap) {
-                    mMap = googleMap;
-                    zoom(person_latLng, 18);
-                }
-            });
-        }
+//        if (latLngs != null){
+//            mapFragment.getMapAsync(new OnMapReadyCallback() {
+//                @Override
+//                public void onMapReady(GoogleMap googleMap) {
+//                    mMap = googleMap;
+//                    zoom(latLngs, 18);
+//                }
+//            });
+//            latLngs = null;
+//    } else if (person_latLng != null){
+//            mapFragment.getMapAsync(new OnMapReadyCallback() {
+//                @Override
+//                public void onMapReady(GoogleMap googleMap) {
+//                    mMap = googleMap;
+//                    zoom(person_latLng, 18);
+//                }
+//            });
+//        }
 
 
     }

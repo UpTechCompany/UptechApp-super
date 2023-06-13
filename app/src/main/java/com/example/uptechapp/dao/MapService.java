@@ -69,12 +69,12 @@ public class MapService implements OnMapReadyCallback, GoogleMap.OnMapClickListe
         GoogleMap.OnMapLongClickListener{
     private static final String TAG = "MapService";
     private final Context context;
-    private Activity activity;
-    private List<Emergency> myEmergencyList;
+    private final Activity activity;
+    private final List<Emergency> myEmergencyList;
     TimeZone userTimeZone = TimeZone.getDefault();
     private Uri uriImage;
-    private StorageReference storageReference;
-    private ActivityResultLauncher<String> mGetContent;
+    private final StorageReference storageReference;
+    private final ActivityResultLauncher<String> mGetContent;
     private Dialog dialog;
     private LatLng location;
 
@@ -83,6 +83,7 @@ public class MapService implements OnMapReadyCallback, GoogleMap.OnMapClickListe
     private TextView editTextDesc;
     private Button btnShare;
     private ImageView emergencyImg;
+    private final LatLng latLngs;
 
 
 
@@ -93,6 +94,7 @@ public class MapService implements OnMapReadyCallback, GoogleMap.OnMapClickListe
         this.mGetContent = mGetContent;
         storageReference = FirebaseStorage.getInstance().getReference("Emergency");
         myEmergencyList = MyViewModel.getInstance().getEmergencyLiveData().getValue();
+        latLngs = MyViewModel.getInstance().getLatLng().getValue();
     }
 
 
@@ -100,6 +102,7 @@ public class MapService implements OnMapReadyCallback, GoogleMap.OnMapClickListe
     public void onMapClick(@NonNull LatLng latLng) {
         Toast.makeText(context, latLng.latitude + " "
                 + latLng.longitude, Toast.LENGTH_SHORT).show();
+        Log.i(TAG, "onMapClick: " + MyViewModel.getInstance().getEmergencyLiveData().getValue().toString());
     }
 
     @Override
@@ -156,7 +159,7 @@ public class MapService implements OnMapReadyCallback, GoogleMap.OnMapClickListe
 
             int id = 1;
 
-            StorageReference fileReference = storageReference.child(String.valueOf(id) + "/Photo." + getFileExtension(uriImage));
+            StorageReference fileReference = storageReference.child(id + "/Photo." + getFileExtension(uriImage));
 
             fileReference.putFile(uriImage).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
@@ -192,7 +195,7 @@ public class MapService implements OnMapReadyCallback, GoogleMap.OnMapClickListe
                             EmergencyApiService.getInstance().postJson(emergency).enqueue(new Callback<Emergency>() {
                                 @Override
                                 public void onResponse(@NonNull Call<Emergency> call, @NonNull Response<Emergency> response) {
-                                    Log.i(TAG, "Response - " + call.toString());
+                                    Log.i(TAG, "Response - " + call);
                                 }
 
                                 @Override
@@ -221,6 +224,10 @@ public class MapService implements OnMapReadyCallback, GoogleMap.OnMapClickListe
     public void onMapReady(@NonNull GoogleMap googleMap) {
         googleMap.setOnMapClickListener(this);
         googleMap.setOnMapLongClickListener(this);
+
+        if (latLngs != null){
+            zoom(latLngs, 18, googleMap);
+        }
 
         if (myEmergencyList != null) {
             for (Emergency emergency : myEmergencyList) {
@@ -288,5 +295,9 @@ public class MapService implements OnMapReadyCallback, GoogleMap.OnMapClickListe
 
             return false;
         });
+
+    }
+    public void zoom(LatLng latLng, float zoomLevel, GoogleMap googleMap) {
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoomLevel));
     }
 }
