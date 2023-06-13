@@ -3,8 +3,10 @@ package com.example.uptechapp.activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +20,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -38,55 +39,16 @@ import java.util.List;
 
 public class EmergencyFeedFragment extends Fragment {
 
-    public static int learn;
     private FragmentEmergencyFeedBinding binding;
-
     private RecyclerView emergencyFeed;
-    private Dialog progressBar;
     private TextView dialogText;
-
-    List<Emergency> myEmergencyList;
-    EmergencyAdapter adapter;
+    private Dialog progressBar;
     private NavController navController;
 
+    private List<Emergency> myEmergencyList;
+    private EmergencyAdapter adapter;
+    public static int learn;
 
-    public Dialog Dialog(@Nullable Bundle savedInstanceState) {
-        String title = getResources().getString(R.string.training);
-        String message = getResources().getString(R.string.massage);
-        String button1String = getResources().getString(R.string.yes);
-        String button2String = getResources().getString(R.string.no);
-        final int[] par = {0};
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(title);  // заголовок
-        builder.setMessage(message); // сообщение
-
-
-        Dialog dialog1 = new Dialog(getContext());
-        dialog1.setContentView(R.layout.learning);
-        dialog1.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-        dialog1.getWindow().setBackgroundDrawable(new ColorDrawable(androidx.constraintlayout.widget.R.style.AlertDialog_AppCompat_Light));
-        builder.setPositiveButton(button1String, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                LearnFragment learnFragment = new LearnFragment();
-                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.mainFragmentContainer, learnFragment);
-                fragmentTransaction.addToBackStack(null);
-                requireActivity().findViewById(R.id.navigation).setVisibility(View.GONE);
-                fragmentTransaction.commit();
-            }
-        });
-        builder.setNegativeButton(button2String, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-
-            }
-        });
-        builder.setCancelable(true);
-
-        return builder.show();
-    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -95,11 +57,15 @@ public class EmergencyFeedFragment extends Fragment {
         NavHostFragment navHostFragment = (NavHostFragment) getParentFragment();
         navController = navHostFragment.getNavController();
 
-        if (learn == 0){
-            Dialog(null);
-            learn = 1;
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
+        long id = sharedPref.getLong(getString(R.string.id_logging), 0L);
+
+        if (id != 0L) {
+            if (learn == 0) {
+                Dialog(null);
+                learn = 1;
+            }
         }
-        Log.d("NIKSD", String.valueOf(learn));
 
         init();
 
@@ -108,7 +74,7 @@ public class EmergencyFeedFragment extends Fragment {
         emergencyFeed.setLayoutManager(layoutManager);
 
         myEmergencyList = new ArrayList<Emergency>();
-        adapter = new EmergencyAdapter(myEmergencyList, getContext(), getActivity(), navController);
+        adapter = new EmergencyAdapter(myEmergencyList, getContext(), navController);
 
         emergencyFeed.setAdapter(adapter);
 
@@ -182,5 +148,43 @@ public class EmergencyFeedFragment extends Fragment {
                 binding.swiperefresh.setRefreshing(false);
             }
         });
+    }
+
+    public Dialog Dialog(@Nullable Bundle savedInstanceState) {
+        String title = getResources().getString(R.string.training);
+        String message = getResources().getString(R.string.massage);
+        String button1String = getResources().getString(R.string.yes);
+        String button2String = getResources().getString(R.string.no);
+        final int[] par = {0};
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(title);  // заголовок
+        builder.setMessage(message); // сообщение
+
+
+        Dialog dialog1 = new Dialog(getContext());
+        dialog1.setContentView(R.layout.learning);
+        dialog1.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog1.getWindow().setBackgroundDrawable(new ColorDrawable(androidx.constraintlayout.widget.R.style.AlertDialog_AppCompat_Light));
+        builder.setPositiveButton(button1String, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                LearnFragment learnFragment = new LearnFragment();
+                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.mainFragmentContainer, learnFragment);
+                fragmentTransaction.addToBackStack(null);
+                requireActivity().findViewById(R.id.navigation).setVisibility(View.GONE);
+                fragmentTransaction.commit();
+            }
+        });
+        builder.setNegativeButton(button2String, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+
+            }
+        });
+        builder.setCancelable(true);
+
+        return builder.show();
     }
 }

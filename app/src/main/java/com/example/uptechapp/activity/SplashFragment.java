@@ -28,7 +28,6 @@ public class SplashFragment extends Fragment {
     private static final String TAG = "ActivitySplash";
     private FragmentSplashBinding binding;
     private NavController navController;
-
     public static String language;
 
     @Nullable
@@ -56,11 +55,11 @@ public class SplashFragment extends Fragment {
                     Log.i(TAG, e.getMessage());
                 }
 
-                if (id != 0l){
+                if (id != 0L){
                     navController.navigate(R.id.fragment_emergency_feed);
                 }
                 else {
-                    navController.navigate(R.id.fragment_emergency_feed);
+                    navController.navigate(R.id.fragment_login);
                     EmergencyFeedFragment.learn = 0;
                 }
                 requireActivity().findViewById(R.id.navigation).setVisibility(View.VISIBLE);
@@ -83,7 +82,6 @@ public class SplashFragment extends Fragment {
         configuration.setLocale(locale);
         configuration.setLayoutDirection(locale);
         getResources().updateConfiguration(configuration, getResources().getDisplayMetrics());
-
     }
     public static String getLanguage() {
         return language;

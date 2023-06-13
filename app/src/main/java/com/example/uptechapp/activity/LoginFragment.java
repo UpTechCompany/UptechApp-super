@@ -97,22 +97,14 @@ public class LoginFragment extends Fragment {
             if (result.getResultCode() == RESULT_OK) {
 
                 try {
-
                     SignInCredential credential = oneTapClient.getSignInCredentialFromIntent(result.getData());
                     String idToken = credential.getGoogleIdToken();
 
                     if (idToken != null) {
                         String email = credential.getId();
-                        Log.i(TAG, "EMAIL - " + email);
-
-                        Log.i(TAG, "DATA " + credential.getPhoneNumber());
-                        Log.i(TAG, "DATA-NAME" + credential.getProfilePictureUri() + " " + credential.getGivenName() + " " + credential.getDisplayName());
 
                         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
                         SharedPreferences.Editor editor = sharedPref.edit();
-
-                        // get id from database
-
 
                         long id = 1L;
 
@@ -131,12 +123,9 @@ public class LoginFragment extends Fragment {
 
                 } catch (ApiException e) {
                     progressBar.dismiss();
-
                     Toast.makeText(getContext(), "API: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 } catch (Exception e) {
                     progressBar.dismiss();
-                    Log.i(TAG, e.getMessage());
-
                     Toast.makeText(getContext(), "Something went wrong with getting data", Toast.LENGTH_SHORT).show();
                 }
 
@@ -148,6 +137,7 @@ public class LoginFragment extends Fragment {
     }
 
     private void googleSignIn() {
+        layoutGoogle.setEnabled(false);
         oneTapClient.beginSignIn(signInRequest)
                 .addOnSuccessListener(new OnSuccessListener<BeginSignInResult>() {
                     @Override
@@ -168,5 +158,6 @@ public class LoginFragment extends Fragment {
                         Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
+        layoutGoogle.setEnabled(true);
     }
 }

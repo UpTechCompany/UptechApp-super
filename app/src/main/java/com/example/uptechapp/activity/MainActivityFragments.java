@@ -1,28 +1,16 @@
 package com.example.uptechapp.activity;
 
+import android.os.Bundle;
+import android.view.MenuItem;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentContainerView;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 
-import android.app.Activity;
-import android.content.res.Configuration;
-import android.os.Build;
-import android.os.Bundle;
-import android.renderscript.ScriptGroup;
-import android.util.Log;
-import android.view.MenuItem;
-import android.view.View;
-
 import com.example.uptechapp.R;
-import com.example.uptechapp.dao.EmergencyAdapter;
 import com.example.uptechapp.databinding.ActivityMainFragmentsBinding;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.navigation.NavigationBarMenu;
 
 public class MainActivityFragments extends AppCompatActivity {
 
@@ -39,9 +27,6 @@ public class MainActivityFragments extends AppCompatActivity {
 
         init();
     }
-
-
-
 
     private void init() {
 

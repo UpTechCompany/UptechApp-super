@@ -1,8 +1,5 @@
 package com.example.uptechapp.dao;
 
-import android.os.Build;
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 
 import com.example.uptechapp.api.CompleteListener;
@@ -29,7 +26,6 @@ public class Database {
                     EMERGENCIES_LIST.clear();
                     EMERGENCIES_LIST.addAll(response.body());
                     MyViewModel.getInstance().getEmergencyLiveData().postValue(EMERGENCIES_LIST);
-                    Log.d("MapService", "1loadEmergencies complete: " + EMERGENCIES_LIST.toString());
                 }
 
                 @Override
@@ -38,26 +34,18 @@ public class Database {
                 }
             });
             listener.OnSuccess();
-            Log.d("MapService", "2loadEmergencies complete: " + EMERGENCIES_LIST.toString());
         } catch (Exception e) {
             listener.OnFailure();
         }
     }
 
     public static Emergency getEmergencyByTitle(String title, List<Emergency> emergencyList) {
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-//            return EMERGENCIES_LIST.stream().filter(emergency -> emergency.getTitle().equals(title)).findAny().orElseThrow(() -> new RuntimeException("not found"));
-//        }
-//        else {
-        Log.i(TAG, "getEmergencyByTitle: " + emergencyList);
         for (Emergency emergency:
                 emergencyList) {
             if(emergency.getTitle().equals(title)) {
                 return emergency;
             }
         }
-//        }
     return null;
     }
-
 }

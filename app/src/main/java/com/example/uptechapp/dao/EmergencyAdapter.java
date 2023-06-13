@@ -1,9 +1,7 @@
 package com.example.uptechapp.dao;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.util.Log;
@@ -16,23 +14,16 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.uptechapp.R;
 import com.example.uptechapp.activity.MainActivityFragments;
 import com.example.uptechapp.model.Emergency;
-import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.io.IOException;
-import java.sql.Time;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -44,46 +35,30 @@ public class EmergencyAdapter extends RecyclerView.Adapter<EmergencyAdapter.View
 
     public static MainActivityFragments mActivity;
     private final List<Emergency> emergenciesList;
-    Activity activity;
     static final String TAG = "AdapterEmergency";
     private final Context context;
     private static Fragment fragment;
     private static NavController  navController;
 
     TimeZone userTimeZone = TimeZone.getDefault();
-//    Geocoder geocoder = new Geocoder(context, Locale.getDefault());
-//    SimpleDateFormat dateFormatLocal = new SimpleDateFormat("HH:mm dd-MM-yyyy");
 
-    public EmergencyAdapter(List<Emergency> emergenciesList, Context context, Activity activity, NavController navController) {
+    public EmergencyAdapter(List<Emergency> emergenciesList, Context context, NavController navController) {
         Log.d(TAG, "EmergencyAdapter: " + emergenciesList);
         this.emergenciesList = emergenciesList;
         this.context = context;
-        this.activity = activity;
         EmergencyAdapter.navController = navController;
-        Log.d(TAG, "EmergencyAdapter: CREATE");
     }
-    public static void goToFragment() {
-        navController.navigate(R.id.fragment_map);
-    }
-
-
-
     @NonNull
     @Override
     public EmergencyAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_emergency2, parent, false);
-        Log.d(TAG, "onCreateViewHolder: return");
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_emergency, parent, false);
         return new EmergencyAdapter.ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull EmergencyAdapter.ViewHolder holder, int position) {
-        Log.d(TAG, "onBindViewHolder: start");
         Emergency emergency = emergenciesList.get(position);
 
-
-        Log.d(TAG, "onBindViewHolder: go");
-        Log.i(TAG, "Emergency - " + emergency.getTitle());
         LatLng loc = new LatLng(emergency.getLattitude(), emergency.getLongitude());
 
         String dateStr = emergency.getTime();
@@ -110,9 +85,6 @@ public class EmergencyAdapter extends RecyclerView.Adapter<EmergencyAdapter.View
             Address address = addresses.get(0);
             fullAddress = address.getAddressLine(0);
         }
-//        String fullAddress = "";
-
-
 
         holder.setData(
                 emergency.getTitle(),
@@ -132,8 +104,8 @@ public class EmergencyAdapter extends RecyclerView.Adapter<EmergencyAdapter.View
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         private final TextView emergencyTitle, emergencyDescription, emergencyTime;
-        private final ImageView emergencyPhoto;
 
+        private final ImageView emergencyPhoto;
         private final Button emergencyMapButton;
 
         public ViewHolder(@NonNull View itemView) {
@@ -155,7 +127,6 @@ public class EmergencyAdapter extends RecyclerView.Adapter<EmergencyAdapter.View
             emergencyTitle.setText(title);
             emergencyDescription.setText(description);
             emergencyMapButton.setText(address);
-            Log.d("Address", address);
             emergencyMapButton.setOnClickListener(v -> {
                 MyViewModel.getInstance().getLatLng().postValue(loc);
                 goToFragment();
@@ -165,6 +136,8 @@ public class EmergencyAdapter extends RecyclerView.Adapter<EmergencyAdapter.View
                 Log.i(TAG, e.getMessage());
             }
         }
-
+    }
+    public static void goToFragment() {
+        navController.navigate(R.id.fragment_map);
     }
 }

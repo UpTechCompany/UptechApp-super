@@ -1,13 +1,12 @@
 package com.example.uptechapp.activity;
 
 import android.Manifest;
-import android.app.Activity;
-import android.app.LocaleManager;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +24,6 @@ import androidx.lifecycle.Observer;
 import com.example.uptechapp.R;
 import com.example.uptechapp.api.CompleteListener;
 import com.example.uptechapp.dao.Database;
-import com.example.uptechapp.dao.LocationTracker;
 import com.example.uptechapp.dao.MapService;
 import com.example.uptechapp.dao.MyViewModel;
 import com.example.uptechapp.databinding.FragmentMapBinding;
@@ -34,15 +32,14 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.internal.IMapFragmentDelegate;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class MapFragment extends Fragment {
 
@@ -50,11 +47,10 @@ public class MapFragment extends Fragment {
 
     private List<Emergency> myEmergencyList;
     private MapService mapService;
-    GoogleMap mMap;
+    private GoogleMap mMap;
     private static LatLng person_latLng = null;
-    ActivityResultLauncher<String[]> locationPermissionRequest;
-
     private static LatLng latLngs = null;
+    ActivityResultLauncher<String[]> locationPermissionRequest;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -139,25 +135,33 @@ public class MapFragment extends Fragment {
                 new ActivityResultCallback<Uri>() {
                     @Override
                     public void onActivityResult(Uri uri) {
+                        Bitmap bitmap = null;
+                        try {
+                            bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), uri);
+                            if (bitmap.getWidth() > 2000 || bitmap.getHeight() > 2000){
+                                double scaleFactor = Math.max(bitmap.getWidth(), bitmap.getHeight()) / 2000.0;
+                                int newWidth = (int) (bitmap.getWidth() / scaleFactor);
+                                int newHeight = (int) (bitmap.getHeight() / scaleFactor);
+                                Bitmap newBitmap = Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, false);
+                                bitmap = newBitmap;
+                                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+                                String path = MediaStore.Images.Media.insertImage(getContext().getContentResolver(), bitmap, "Title", null);
+                                uri =  Uri.parse(path);
+                            }
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
                         mapService.setImage(uri);
                     }
                 });
+
 
         mapService = new MapService(getContext(), getActivity(), mGetContent, person_latLng);
         SupportMapFragment mapFragment = (SupportMapFragment)
                 getChildFragmentManager().findFragmentById(R.id.google_map);
         mapFragment.getMapAsync(mapService);
 
-    }
-
-    public void zoom(LatLng latLng, float zoomLevel) {
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoomLevel));
-    }
-
-
-    boolean checkLoc(){
-        return ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
-                ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;
     }
 
     @Nullable
@@ -170,5 +174,15 @@ public class MapFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         binding = null;
+    }
+
+    public void zoom(LatLng latLng, float zoomLevel) {
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoomLevel));
+    }
+
+
+    boolean checkLoc(){
+        return ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
+                ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;
     }
 }

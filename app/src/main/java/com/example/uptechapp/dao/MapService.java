@@ -9,10 +9,8 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Address;
 import android.location.Geocoder;
-import android.location.LocationManager;
 import android.net.Uri;
 import android.preference.PreferenceManager;
-import android.renderscript.ScriptGroup;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -24,19 +22,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.Observer;
 import androidx.navigation.Navigation;
 
 import com.bumptech.glide.Glide;
 import com.example.uptechapp.R;
-import com.example.uptechapp.activity.MapFragment;
-import com.example.uptechapp.api.CompleteListener;
 import com.example.uptechapp.api.EmergencyApiService;
-import com.example.uptechapp.databinding.DialogFragmentBinding;
 import com.example.uptechapp.model.Emergency;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -55,7 +46,6 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -65,8 +55,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MapService implements OnMapReadyCallback, GoogleMap.OnMapClickListener,
-        GoogleMap.OnMapLongClickListener{
+public class MapService implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener{
     private static final String TAG = "MapService";
     private final Context context;
     private final Activity activity;
@@ -83,11 +72,9 @@ public class MapService implements OnMapReadyCallback, GoogleMap.OnMapClickListe
     private TextView editTextDesc;
     private Button btnShare;
     private ImageView emergencyImg;
+    private int id;
     private final LatLng latLngs;
     private final LatLng person_latLng;
-
-
-
 
     public MapService(Context context, Activity activity, ActivityResultLauncher<String> mGetContent, LatLng person_latLng) {
         this.context = context;
@@ -99,13 +86,6 @@ public class MapService implements OnMapReadyCallback, GoogleMap.OnMapClickListe
         latLngs = MyViewModel.getInstance().getLatLng().getValue();
     }
 
-
-    @Override
-    public void onMapClick(@NonNull LatLng latLng) {
-        Toast.makeText(context, latLng.latitude + " "
-                + latLng.longitude, Toast.LENGTH_SHORT).show();
-        Log.i(TAG, "onMapClick: " + MyViewModel.getInstance().getEmergencyLiveData().getValue().toString());
-    }
 
     @Override
     public void onMapLongClick(@NonNull LatLng latLng) {
@@ -157,9 +137,14 @@ public class MapService implements OnMapReadyCallback, GoogleMap.OnMapClickListe
     }
 
     private void shareEmergency() {
+        btnShare.setEnabled(false);
         if (uriImage != null) {
 
-            int id = 1;
+            id = 1;
+            if (myEmergencyList.size() != 0) {
+                id = Integer.parseInt(myEmergencyList.get(myEmergencyList.size() - 1).getId()) + 1;
+            }
+
 
             StorageReference fileReference = storageReference.child(id + "/Photo." + getFileExtension(uriImage));
 
@@ -178,9 +163,7 @@ public class MapService implements OnMapReadyCallback, GoogleMap.OnMapClickListe
                             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                                 time = LocalDateTime.now(ZoneOffset.UTC).toString().substring(0, 16).split("T");
                             }
-                            Log.i("time", "Time" + Arrays.toString(time));
                             String emTime = time[1] + " " + time[0].substring(8) + "." + time[0].substring(5,7) + "." + time[0].substring(0,4);
-                            Log.d("time", emTime);
                             Emergency emergency = null;
                             emergency = new Emergency(
                                     "-1",
@@ -205,7 +188,7 @@ public class MapService implements OnMapReadyCallback, GoogleMap.OnMapClickListe
                                     Log.i(TAG, "FAIL - " + t.getMessage());
                                 }
                             });
-
+                            btnShare.setEnabled(true);
                         }
                     });
                     Navigation.findNavController(activity, R.id.mainFragmentContainer).navigate(R.id.fragment_emergency_feed);
@@ -224,8 +207,8 @@ public class MapService implements OnMapReadyCallback, GoogleMap.OnMapClickListe
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
-        googleMap.setOnMapClickListener(this);
         googleMap.setOnMapLongClickListener(this);
+        Log.i(TAG, "shareEmergency: " + myEmergencyList);
 
         if (latLngs != null){
             zoom(latLngs, 18, googleMap);
@@ -241,12 +224,7 @@ public class MapService implements OnMapReadyCallback, GoogleMap.OnMapClickListe
             }
         }
 
-
-
-        Log.i(TAG, "eml before click: " + MyViewModel.getInstance().getEmergencyLiveData().getValue());
         googleMap.setOnMarkerClickListener(marker -> {
-
-            Log.i(TAG, "eml after click: " + MyViewModel.getInstance().getEmergencyLiveData().getValue());
             Emergency emergency = Database.getEmergencyByTitle(marker.getTitle(), MyViewModel.getInstance().getEmergencyLiveData().getValue());
             LatLng loc = new LatLng(emergency.getLattitude(), emergency.getLongitude());
 
@@ -295,7 +273,6 @@ public class MapService implements OnMapReadyCallback, GoogleMap.OnMapClickListe
 
 
             ImageView imageView = dialog.getWindow().findViewById(R.id.iv_image);
-            Log.i(TAG, "photo url: " + emergency.getPhotoUrl());
             Glide.with(context).load(emergency.getPhotoUrl()).into(imageView);
 
             return false;
